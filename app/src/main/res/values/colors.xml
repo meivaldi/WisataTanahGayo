@@ -6,4 +6,7 @@
 
     <color name="colorPrimaryLight">#9cff57</color>
     <color name="colorPrimaryText">#000000</color>
+
+    <color name="background">#dddddd</color>
+
 </resources>
