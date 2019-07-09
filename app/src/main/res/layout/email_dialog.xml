@@ -43,10 +43,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:inputType="textEmailAddress"
                     android:layout_centerHorizontal="true"/>
 
                 <Button
-                    android:id="@+id/change"
+                    android:id="@+id/change_email"
                     android:layout_below="@id/new_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

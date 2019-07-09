@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                     else
                         loadFragment(new LoginFragment());
 
-                    break;
+                    return true;
             }
             return false;
         }
