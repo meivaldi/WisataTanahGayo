@@ -6,6 +6,169 @@
     android:padding="16dp"
     tools:context=".fragment.ProfileFragment">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@drawable/overlay" />
+
+            <ImageView
+                android:id="@+id/photo"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/circle"
+                android:layout_centerHorizontal="true"
+                android:elevation="10dp"/>
+
+            <RelativeLayout
+                android:id="@+id/profile_box"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="115dp"
+                android:layout_marginBottom="10dp"
+                android:background="@android:color/white"
+                android:elevation="5dp">
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="85dp"
+                    android:text="Rido Meivaldi"
+                    android:textSize="22dp"
+                    android:textStyle="bold"
+                    android:textAlignment="center"/>
+
+                <TextView
+                    android:id="@+id/email"
+                    android:layout_below="@id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="meivaldi@gmail.com"
+                    android:textSize="18dp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/change_name"
+                android:elevation="5dp"
+                android:layout_below="@id/profile_box"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:padding="10dp"
+                android:background="@color/colorPrimary">
+
+                <ImageView
+                    android:id="@+id/usr_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/name_white"/>
+
+                <TextView
+                    android:id="@+id/username_label"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_toRightOf="@id/usr_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ubah Nama"
+                    android:textColor="@android:color/white"
+                    android:textSize="18dp"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/change_email"
+                android:layout_below="@id/change_name"
+                android:elevation="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:padding="10dp"
+                android:background="@color/colorPrimary">
+
+                <ImageView
+                    android:id="@+id/email_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/email_white"/>
+
+                <TextView
+                    android:id="@+id/email_label"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_toRightOf="@id/email_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ubah Email"
+                    android:textColor="@android:color/white"
+                    android:textSize="18dp"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/change_password"
+                android:layout_below="@id/change_email"
+                android:elevation="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:padding="10dp"
+                android:background="@color/colorPrimary">
+
+                <ImageView
+                    android:id="@+id/pass_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/lock_white"/>
+
+                <TextView
+                    android:id="@+id/password_label"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_toRightOf="@id/pass_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ubah Password"
+                    android:textColor="@android:color/white"
+                    android:textSize="18dp"/>
+
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/logout"
+                android:layout_below="@id/change_password"
+                android:elevation="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:padding="10dp"
+                android:background="@color/colorPrimary"
+                android:text="Logout"
+                android:textColor="@android:color/white"/>
+
+        </RelativeLayout>
+
+    </ScrollView>
 
 </RelativeLayout>

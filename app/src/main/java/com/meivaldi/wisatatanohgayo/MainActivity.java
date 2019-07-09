@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,7 +37,35 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        loadFragment(new HomeFragment());
+        int frag = getIntent().getIntExtra("fragment", -1);
+
+        if (frag != -1) {
+            switch (frag) {
+                case 0:
+                    loadFragment(new HomeFragment());
+
+                    FirebaseUser usr = mAuth.getCurrentUser();
+                    Toast.makeText(this, "Selamat Datang " + usr.getDisplayName(), Toast.LENGTH_SHORT).show();
+
+                    break;
+                case 1:
+                    loadFragment(new DiscoverFragment());
+                    break;
+                case 2:
+                    FirebaseUser user = mAuth.getCurrentUser();
+
+                    if (user != null)
+                        loadFragment(new ProfileFragment());
+                    else
+                        loadFragment(new LoginFragment());
+
+                    bottomNavigationView.setSelectedItemId(R.id.navigation_profile);
+
+                    break;
+            }
+        } else {
+            loadFragment(new HomeFragment());
+        }
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
