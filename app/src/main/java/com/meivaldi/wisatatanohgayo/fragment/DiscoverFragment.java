@@ -5,6 +5,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -28,8 +31,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.meivaldi.wisatatanohgayo.Place;
 import com.meivaldi.wisatatanohgayo.R;
+import com.meivaldi.wisatatanohgayo.adapter.PlaceAdapter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DiscoverFragment extends Fragment {
 
@@ -37,8 +44,11 @@ public class DiscoverFragment extends Fragment {
     private DatabaseReference db;
 
     private AppCompatEditText keywordET;
-    private RecyclerView recyclerView;
     private RelativeLayout dataContainer;
+
+    private List<Place> places;
+    private PlaceAdapter adapter;
+    private RecyclerView recyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,20 +56,32 @@ public class DiscoverFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_discover, container, false);
 
         keywordET = view.findViewById(R.id.keywordET);
-        recyclerView = view.findViewById(R.id.recycler_view);
         dataContainer = view.findViewById(R.id.data);
 
         shimmerContainer = view.findViewById(R.id.shimmer_container);
         shimmerContainer.startShimmerAnimation();
 
-        db = FirebaseDatabase.getInstance().getReference("wisata-tanoh-gayo/1");
+        places = new ArrayList<>();
+        adapter = new PlaceAdapter(getContext(), places);
 
+        recyclerView = view.findViewById(R.id.recycler_view);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+        recyclerView.setAdapter(adapter);
+
+        db = FirebaseDatabase.getInstance().getReference();
         db.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Place place = dataSnapshot.getValue(Place.class);
+                        for (DataSnapshot data: dataSnapshot.getChildren()) {
+                            Place place = data.getValue(Place.class);
 
-                        Toast.makeText(getContext(), place.getNama_tempat(), Toast.LENGTH_SHORT).show();
+                            places.add(place);
+                        }
+
+                        adapter.notifyDataSetChanged();
 
                         shimmerContainer.stopShimmerAnimation();
                         shimmerContainer.setVisibility(View.GONE);

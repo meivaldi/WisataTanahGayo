@@ -111,8 +111,8 @@ public class RegisterFragment extends Fragment {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        User userObj = new User(name, email, password);
-                                        db.child("users").child(name).setValue(userObj);
+                                        /*User userObj = new User(name, email, password);
+                                        db.child("users").child(name).setValue(userObj);*/
 
                                         Toast.makeText(getContext(), "Berhasil mendaftarkan akun", Toast.LENGTH_SHORT).show();
                                         nameET.setText("");
