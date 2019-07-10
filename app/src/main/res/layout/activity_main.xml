@@ -13,11 +13,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/colorPrimaryDark"
-        android:foreground="?attr/selectableItemBackground"
         app:itemIconTint="@drawable/bottom_navigation_colors"
         app:itemTextColor="@drawable/bottom_navigation_colors"
-        app:menu="@menu/bottom_navigation_menu"
-        android:theme="@style/Widget.MaterialComponents.BottomNavigationView"/>
+        app:menu="@menu/bottom_navigation_menu"/>
 
     <RelativeLayout
         android:id="@+id/container"
