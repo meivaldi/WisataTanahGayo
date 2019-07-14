@@ -29,28 +29,9 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     private Context context;
     private List<Image> imageList;
 
-    private Dialog dialog;
-    private ImageView detailImage;
-    private RelativeLayout close;
-
     public ImageAdapter(Context context, List<Image> imageList) {
         this.context = context;
         this.imageList = imageList;
-
-        dialog = new Dialog(context);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.detail_image_dialog);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
-        detailImage = dialog.findViewById(R.id.detail_image);
-        close = dialog.findViewById(R.id.close);
-
-        close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
     }
 
     @NonNull
@@ -80,27 +61,6 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                         }
                     }
                 });
-
-        reference.getDownloadUrl()
-                .addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        if (task.isSuccessful()) {
-                            Glide.with(context)
-                                    .load(task.getResult())
-                                    .transition(DrawableTransitionOptions.withCrossFade())
-                                    .thumbnail(0.5f)
-                                    .into(detailImage);
-                        }
-                    }
-                });
-
-        holder.imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.show();
-            }
-        });
     }
 
     @Override

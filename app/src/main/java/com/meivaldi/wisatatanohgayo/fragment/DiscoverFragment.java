@@ -1,5 +1,8 @@
 package com.meivaldi.wisatatanohgayo.fragment;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,6 +21,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -31,8 +36,12 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.meivaldi.wisatatanohgayo.DetailTempatWisata;
 import com.meivaldi.wisatatanohgayo.Place;
 import com.meivaldi.wisatatanohgayo.R;
+import com.meivaldi.wisatatanohgayo.RecyclerTouchListener;
 import com.meivaldi.wisatatanohgayo.adapter.PlaceAdapter;
 
 import java.util.ArrayList;
@@ -64,7 +73,7 @@ public class DiscoverFragment extends Fragment {
         shimmerContainer.startShimmerAnimation();
 
         places = new ArrayList<>();
-        adapter = new PlaceAdapter(getContext(), places);
+        adapter = new PlaceAdapter(getActivity(), getContext(), places);
 
         recyclerView = view.findViewById(R.id.recycler_view);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());

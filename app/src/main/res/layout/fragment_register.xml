@@ -39,7 +39,7 @@
                     android:layout_marginTop="50dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
-                    android:inputType="textEmailAddress"
+                    android:inputType="textCapWords"
                     android:padding="5dp"
                     android:drawableLeft="@drawable/name"
                     android:drawablePadding="10dp"

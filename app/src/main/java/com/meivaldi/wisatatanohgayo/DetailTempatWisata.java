@@ -7,14 +7,19 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -39,6 +44,11 @@ public class DetailTempatWisata extends AppCompatActivity {
     private ImageAdapter adapter;
     private RecyclerView recyclerView;
 
+    private ProgressDialog pDialog;
+    private Dialog dialog;
+    private ImageView detailImage;
+    private RelativeLayout close;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +65,26 @@ public class DetailTempatWisata extends AppCompatActivity {
         luas = findViewById(R.id.luas);
         ketinggian = findViewById(R.id.ketinggian);
 
-        int position = getIntent().getIntExtra("position", 0);
+        final int position = getIntent().getIntExtra("position", 0);
+
+        pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Memuat...");
+        pDialog.setCancelable(false);
+
+        dialog = new Dialog(this);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.detail_image_dialog);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        detailImage = dialog.findViewById(R.id.detail_image);
+        close = dialog.findViewById(R.id.close);
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
 
         db = FirebaseDatabase.getInstance().getReference().child("tempat_wisata").child(String.valueOf(position));
         db.addValueEventListener(new ValueEventListener() {
@@ -111,6 +140,36 @@ public class DetailTempatWisata extends AppCompatActivity {
             imageList.add(new Image("tempat_wisata/" + String.valueOf(position) + "/image2.jpg"));
             imageList.add(new Image("tempat_wisata/" + String.valueOf(position) + "/image3.jpg"));
         }
+
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView,
+                new RecyclerTouchListener.ClickListener() {
+                    @Override
+                    public void onClick(View view, int pos) {
+                        pDialog.show();
+                        StorageReference ref = FirebaseStorage.getInstance().getReference(imageList.get(pos).getImageUrl());
+                        ref.getDownloadUrl()
+                                .addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Uri> task) {
+                                        if (task.isSuccessful()) {
+                                            Glide.with(getApplicationContext())
+                                                    .load(task.getResult())
+                                                    .transition(DrawableTransitionOptions.withCrossFade())
+                                                    .thumbnail(0.5f)
+                                                    .into(detailImage);
+                                        }
+                                    }
+                                });
+
+                        dialog.show();
+                        pDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onLongClick(View view, int position) {
+
+                    }
+                }));
 
         adapter.notifyDataSetChanged();
     }

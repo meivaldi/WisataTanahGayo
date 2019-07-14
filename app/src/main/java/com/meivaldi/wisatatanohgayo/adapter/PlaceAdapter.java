@@ -1,6 +1,9 @@
 package com.meivaldi.wisatatanohgayo.adapter;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -10,6 +13,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +27,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.meivaldi.wisatatanohgayo.CircleTransform;
+import com.meivaldi.wisatatanohgayo.DetailTempatWisata;
 import com.meivaldi.wisatatanohgayo.MyApppGlideModule;
 import com.meivaldi.wisatatanohgayo.Place;
 import com.meivaldi.wisatatanohgayo.R;
@@ -36,11 +41,13 @@ import androidx.recyclerview.widget.RecyclerView;
 public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.MyViewHolder>
     implements Filterable {
 
+    private Activity activity;
     private Context context;
     private List<Place> places;
     private List<Place> placesFiltered;
 
-    public PlaceAdapter(Context context, List<Place> places) {
+    public PlaceAdapter(Activity activity, Context context, List<Place> places) {
+        this.activity = activity;
         this.context = context;
         this.places = places;
         this.placesFiltered = places;
@@ -56,7 +63,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.MyViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final PlaceAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final PlaceAdapter.MyViewHolder holder, final int position) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/IndieFlower.ttf");
         Place place = placesFiltered.get(position);
 
@@ -85,6 +92,18 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.MyViewHolder
         for (int i=0; i<starCount; i++) {
             holder.stars[i].setBackgroundResource(R.drawable.star);
         }
+
+        holder.root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(activity,
+                        holder.image, "image");
+
+                Intent intent = new Intent(context, DetailTempatWisata.class);
+                intent.putExtra("position", position);
+                context.startActivity(intent, options.toBundle());
+            }
+        });
     }
 
     @Override
@@ -131,9 +150,11 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.MyViewHolder
         private TextView placeName;
         private ImageView image;
         private ImageView[] stars;
+        private RelativeLayout root;
 
         public MyViewHolder(@NonNull View view) {
             super(view);
+            root = view.findViewById(R.id.root);
             placeName = view.findViewById(R.id.place);
             image = view.findViewById(R.id.image);
 

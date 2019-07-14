@@ -150,8 +150,28 @@
                 android:layout_marginTop="10dp"
                 android:scrollbars="none"/>
 
+            <TextView
+                android:id="@+id/ulasan_label"
+                android:layout_below="@id/image_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Ulasan"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                android:fontFamily="@font/indie_flower"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/ulasan_list"
+                android:layout_below="@id/ulasan_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:scrollbars="none"/>
+
             <Button
                 android:id="@+id/ulasan"
+                android:layout_below="@id/ulasan_list"
                 android:layout_marginTop="30dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
