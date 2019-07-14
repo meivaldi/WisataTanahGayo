@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
             final Uri selectedFile = data.getData();
 
             StorageReference reference = FirebaseStorage.getInstance().getReference("user_photo")
-                    .child(mAuth.getCurrentUser().getEmail()).child("user.png");
+                    .child(mAuth.getCurrentUser().getDisplayName()).child("user.png");
 
             UploadTask task = reference.putFile(selectedFile);
 

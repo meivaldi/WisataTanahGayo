@@ -8,6 +8,9 @@ public class Ulasan {
     private String nama, ulasan;
     private int rating;
 
+    public Ulasan() {
+    }
+
     public Ulasan(String nama, String ulasan, int rating) {
         this.nama = nama;
         this.ulasan = ulasan;
