@@ -90,7 +90,7 @@ public class DiscoverFragment extends Fragment {
             }
         });
 
-        db = FirebaseDatabase.getInstance().getReference();
+        db = FirebaseDatabase.getInstance().getReference().child("tempat_wisata");
         db.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

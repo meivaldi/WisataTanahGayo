@@ -1,16 +1,26 @@
 package com.meivaldi.wisatatanohgayo.adapter;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.meivaldi.wisatatanohgayo.CircleTransform;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.meivaldi.wisatatanohgayo.DetailTempatWisata;
 import com.meivaldi.wisatatanohgayo.Place;
 import com.meivaldi.wisatatanohgayo.R;
 
@@ -20,10 +30,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> {
+    private Activity activity;
     private Context context;
     private List<Place> places;
 
-    public CardAdapter(Context context, List<Place> places) {
+    public CardAdapter(Activity activity, Context context, List<Place> places) {
+        this.activity = activity;
         this.context = context;
         this.places = places;
     }
@@ -38,25 +50,59 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/IndieFlower.ttf");
         Place place = places.get(position);
 
         holder.placeName.setTypeface(typeface);
         holder.placeName.setText(place.getNama_tempat());
 
-        Glide.with(context).load(R.drawable.place)
-                .crossFade()
-                .thumbnail(0.5f)
-                .bitmapTransform(new CircleTransform(context))
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(holder.image);
+        StorageReference reference = FirebaseStorage.getInstance().getReference(place.getFoto());
+
+        reference.getDownloadUrl()
+                .addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if (task.isSuccessful()) {
+                            Glide.with(context)
+                                    .load(task.getResult())
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .transition(DrawableTransitionOptions.withCrossFade())
+                                    .thumbnail(0.5f)
+                                    .into(holder.image);
+                        }
+                    }
+                });
 
         int starCount = place.getRating();
 
         for (int i=0; i<starCount; i++) {
-            holder.stars[i].setBackgroundResource(R.drawable.star_filled);
+            holder.stars[i].setBackgroundResource(R.drawable.star);
         }
+
+        holder.image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(activity,
+                        holder.image, "image");
+
+                Intent intent = new Intent(context, DetailTempatWisata.class);
+                intent.putExtra("position", position);
+                context.startActivity(intent, options.toBundle());
+            }
+        });
+
+        holder.placeName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(activity,
+                        holder.image, "image");
+
+                Intent intent = new Intent(context, DetailTempatWisata.class);
+                intent.putExtra("position", position);
+                context.startActivity(intent, options.toBundle());
+            }
+        });
     }
 
     @Override

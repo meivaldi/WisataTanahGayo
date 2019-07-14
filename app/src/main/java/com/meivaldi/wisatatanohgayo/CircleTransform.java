@@ -11,9 +11,13 @@ import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.meivaldi.wisatatanohgayo.fragment.ProfileFragment;
 
+import java.security.MessageDigest;
+
+import androidx.annotation.NonNull;
+
 public class CircleTransform extends BitmapTransformation {
     public CircleTransform(Context context) {
-        super(context);
+        super();
     }
 
     @Override
@@ -46,7 +50,7 @@ public class CircleTransform extends BitmapTransformation {
     }
 
     @Override
-    public String getId() {
-        return getClass().getName();
+    public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+
     }
 }

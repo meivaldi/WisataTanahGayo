@@ -21,6 +21,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -226,12 +228,32 @@ public class ProfileFragment extends Fragment {
         });
 
         photo = view.findViewById(R.id.photo);
-        Glide.with(getContext()).load(R.drawable.user)
-                .crossFade()
-                .thumbnail(0.5f)
-                .bitmapTransform(new CircleTransform(getContext()))
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(photo);
+        photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+
+                getActivity().startActivityForResult(Intent.createChooser(intent, "Pilih file"), 100);
+            }
+        });
+
+        if (auth.getCurrentUser().getPhotoUrl() == null) {
+            Glide.with(getContext()).load(R.drawable.users)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .thumbnail(0.5f)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(photo);
+        } else {
+            Glide.with(getContext()).load(auth.getCurrentUser().getPhotoUrl())
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .thumbnail(0.5f)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(photo);
+        }
 
         FirebaseUser user = auth.getCurrentUser();
         name.setText(user.getDisplayName());

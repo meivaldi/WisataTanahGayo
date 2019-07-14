@@ -51,13 +51,13 @@ public class HomeFragment extends Fragment {
 
         TextView title = view.findViewById(R.id.title);
         title.setTypeface(typeface);
-
         dataContainer = view.findViewById(R.id.container);
+
         shimmerContainer = view.findViewById(R.id.shimmer_container);
         shimmerContainer.startShimmerAnimation();
 
         places = new ArrayList<>();
-        adapter = new CardAdapter(getContext(), places);
+        adapter = new CardAdapter(getActivity(), getContext(), places);
 
         recyclerView = view.findViewById(R.id.recycler_view);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
@@ -65,7 +65,7 @@ public class HomeFragment extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
 
-        db = FirebaseDatabase.getInstance().getReference();
+        db = FirebaseDatabase.getInstance().getReference().child("tempat_wisata");
         db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

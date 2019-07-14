@@ -5,14 +5,14 @@ import com.google.firebase.database.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class Place {
 
-    private String alamat, deskripsi, jam_operasional, nama_tempat, sumber, ketinggian, luas;
+    private String alamat, deskripsi, jam_operasional, nama_tempat, sumber, ketinggian, luas, foto;
     private Double lat, lon;
     private int rating;
 
     public Place() { }
 
     public Place(String alamat, String deskripsi, String jam_operasional, String nama_tempat, String sumber,
-                 String ketinggian, String luas, Double lat, Double lon, int rating) {
+                 String ketinggian, String luas, Double lat, Double lon, int rating, String foto) {
         this.alamat = alamat;
         this.deskripsi = deskripsi;
         this.jam_operasional = jam_operasional;
@@ -23,6 +23,7 @@ public class Place {
         this.lat = lat;
         this.lon = lon;
         this.rating = rating;
+        this.foto = foto;
     }
 
     public String getAlamat() {
@@ -103,5 +104,13 @@ public class Place {
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 }

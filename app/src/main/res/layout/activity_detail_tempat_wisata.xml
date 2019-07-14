@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:padding="16dp"
+    tools:context=".DetailTempatWisata">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/rounded_background"
+        android:padding="10dp"
+        android:elevation="8dp"
+        android:scrollbars="none">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/news_image"
+                android:transitionName="image"
+                android:layout_width="match_parent"
+                android:layout_height="250dp" />
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_below="@id/news_image"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/indie_flower"/>
+
+            <TextView
+                android:id="@+id/content_label"
+                android:layout_below="@id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Deskripsi"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                android:fontFamily="@font/indie_flower"/>
+
+            <TextView
+                android:id="@+id/content"
+                android:layout_below="@id/content_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/content"
+                android:textSize="16dp"
+                android:justificationMode="inter_word"
+                android:fontFamily="@font/indie_flower" />
+
+            <TextView
+                android:id="@+id/source"
+                android:layout_below="@id/content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sumber: "
+                android:textColor="@android:color/black"
+                android:justificationMode="inter_word"
+                android:fontFamily="@font/indie_flower" />
+
+            <TextView
+                android:id="@+id/address_label"
+                android:layout_below="@id/source"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Alamat"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                android:fontFamily="@font/indie_flower"/>
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_below="@id/address_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="16dp"
+                android:justificationMode="inter_word"
+                android:fontFamily="@font/indie_flower"/>
+
+            <TextView
+                android:id="@+id/luas_label"
+                android:layout_below="@id/address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Luas"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                android:fontFamily="@font/indie_flower"/>
+
+            <TextView
+                android:id="@+id/luas"
+                android:layout_below="@id/luas_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="16dp"
+                android:justificationMode="inter_word"
+                android:fontFamily="@font/indie_flower"/>
+
+            <TextView
+                android:id="@+id/ketinggian_label"
+                android:layout_below="@id/luas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Ketinggian"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                android:fontFamily="@font/indie_flower"/>
+
+            <TextView
+                android:id="@+id/ketinggian"
+                android:layout_below="@id/ketinggian_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="16dp"
+                android:justificationMode="inter_word"
+                android:fontFamily="@font/indie_flower"/>
+
+            <TextView
+                android:id="@+id/image_label"
+                android:layout_below="@id/ketinggian"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Foto"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                android:fontFamily="@font/indie_flower"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/image_list"
+                android:layout_below="@id/image_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:scrollbars="none"/>
+
+            <fragment
+                android:id="@+id/map"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_centerHorizontal="true"/>
+
+            <Button
+                android:id="@+id/ulasan"
+                android:layout_below="@id/map"
+                android:layout_marginTop="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/background_button"
+                android:text="Beri Ulasan"
+                android:fontFamily="@font/indie_flower"/>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
