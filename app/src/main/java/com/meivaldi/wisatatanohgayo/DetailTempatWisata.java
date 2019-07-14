@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -90,6 +91,7 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
 
     private GoogleMap gMap;
     private FusedLocationProviderClient fusedLocationClient;
+    private ScrollView scrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -387,8 +389,9 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
         });
 
         closerPlaceList = new ArrayList<>();
+        scrollView = findViewById(R.id.scrollView);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        SupportMapFragment mapFragment = (CustomSupportFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
@@ -398,6 +401,15 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
+        gMap.getUiSettings().setZoomControlsEnabled(true);
+
+        ((CustomSupportFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map)).setListener(new CustomSupportFragment.OnTouchListener() {
+            @Override
+            public void onTouch() {
+                scrollView.requestDisallowInterceptTouchEvent(true);
+            }
+        });
 
         int position = getIntent().getIntExtra("position", 0);
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("tempat_wisata")
