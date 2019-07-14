@@ -3,19 +3,27 @@ package com.meivaldi.wisatatanohgayo;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,7 +31,17 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,7 +58,7 @@ import com.meivaldi.wisatatanohgayo.adapter.ReviewAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetailTempatWisata extends AppCompatActivity {
+public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyCallback {
 
     private ImageView image;
     private TextView namaTempat, content, sumber, alamat, luas, ketinggian, closerLabel;
@@ -68,6 +86,10 @@ public class DetailTempatWisata extends AppCompatActivity {
 
     private Place currentPlace;
     private List<Place> closerPlaceList;
+    private FrameLayout frameLayout;
+
+    private GoogleMap gMap;
+    private FusedLocationProviderClient fusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +107,7 @@ public class DetailTempatWisata extends AppCompatActivity {
         luas = findViewById(R.id.luas);
         ketinggian = findViewById(R.id.ketinggian);
         closerLabel = findViewById(R.id.closer_label);
+        frameLayout = findViewById(R.id.frame_layout);
 
         final int position = getIntent().getIntExtra("position", 0);
 
@@ -212,7 +235,7 @@ public class DetailTempatWisata extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 reviewList.clear();
-                for (DataSnapshot data: dataSnapshot.getChildren()) {
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
                     Ulasan ulasan = data.getValue(Ulasan.class);
                     reviewList.add(ulasan);
                 }
@@ -364,6 +387,69 @@ public class DetailTempatWisata extends AppCompatActivity {
         });
 
         closerPlaceList = new ArrayList<>();
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        gMap = googleMap;
+
+        int position = getIntent().getIntExtra("position", 0);
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("tempat_wisata")
+                .child(String.valueOf(position));
+
+        dbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                final Place place = dataSnapshot.getValue(Place.class);
+
+                LatLng currentPlace = new LatLng(place.getLat(), place.getLon());
+                gMap.addMarker(new MarkerOptions().position(currentPlace).title("Marker in Sydney"));
+                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPlace, 12));
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    Activity#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for Activity#requestPermissions for more details.
+                        return;
+                    }
+                }
+
+                fusedLocationClient.getLastLocation()
+                        .addOnSuccessListener(DetailTempatWisata.this, new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                if (location != null) {
+                                    gMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())));
+
+                                    PolylineOptions options = new PolylineOptions().width(5).color(Color.GREEN)
+                                            .geodesic(true);
+
+                                    options.add(new LatLng(location.getLatitude(), location.getLongitude()));
+                                    options.add(new LatLng(place.getLat(), place.getLon()));
+
+                                    gMap.addPolyline(options);
+                                } else {
+                                    Toast.makeText(DetailTempatWisata.this, "Hidupkan GPS Anda", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 }

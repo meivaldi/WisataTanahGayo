@@ -30,12 +30,12 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="aec91bdcc1d68ec02dc9cde8ecbea7fca3ebff42" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAWdzZ6I45-QOtuhseFahX4lxuz2HDhsng" />
+            android:value="AIzaSyAMxXQp25ULn3CzOLFLacXNcwE9MsA14C8" />
 
-        <activity android:name=".DetailTempatWisata"></activity>
+        <activity android:name=".DetailTempatWisata"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
