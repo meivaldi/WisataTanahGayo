@@ -72,7 +72,6 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.MyViewHolder
                         if (task.isSuccessful()) {
                             Glide.with(context)
                                     .load(task.getResult())
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                                     .transition(DrawableTransitionOptions.withCrossFade())
                                     .thumbnail(0.5f)
                                     .apply(RequestOptions.circleCropTransform())

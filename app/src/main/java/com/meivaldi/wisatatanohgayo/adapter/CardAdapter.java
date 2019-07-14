@@ -11,10 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -66,7 +64,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
                         if (task.isSuccessful()) {
                             Glide.with(context)
                                     .load(task.getResult())
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                                     .transition(DrawableTransitionOptions.withCrossFade())
                                     .thumbnail(0.5f)
                                     .into(holder.image);

@@ -74,7 +74,6 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                         if (task.isSuccessful()) {
                             Glide.with(context)
                                     .load(task.getResult())
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                                     .transition(DrawableTransitionOptions.withCrossFade())
                                     .thumbnail(0.5f)
                                     .into(holder.imageView);
@@ -89,7 +88,6 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                         if (task.isSuccessful()) {
                             Glide.with(context)
                                     .load(task.getResult())
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                                     .transition(DrawableTransitionOptions.withCrossFade())
                                     .thumbnail(0.5f)
                                     .into(detailImage);
