@@ -3,6 +3,7 @@ package com.meivaldi.wisatatanohgayo;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -13,12 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -54,9 +58,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.meivaldi.wisatatanohgayo.adapter.ImageAdapter;
+import com.meivaldi.wisatatanohgayo.adapter.PlaceAdapter;
 import com.meivaldi.wisatatanohgayo.adapter.ReviewAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyCallback {
@@ -85,13 +91,14 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
     private ImageView star1, star2, star3, star4, star5;
     private int ratingValue;
 
-    private Place currentPlace;
     private List<Place> closerPlaceList;
-    private FrameLayout frameLayout;
+    private PlaceAdapter closerAdapter;
+    private RecyclerView closerPlaceView;
 
     private GoogleMap gMap;
     private FusedLocationProviderClient fusedLocationClient;
     private ScrollView scrollView;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +108,19 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_detail_tempat_wisata);
 
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setSubtitleTextColor(Color.WHITE);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DetailTempatWisata.super.onBackPressed();
+            }
+        });
+
         image = findViewById(R.id.news_image);
         namaTempat = findViewById(R.id.name);
         content = findViewById(R.id.content);
@@ -109,7 +129,6 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
         luas = findViewById(R.id.luas);
         ketinggian = findViewById(R.id.ketinggian);
         closerLabel = findViewById(R.id.closer_label);
-        frameLayout = findViewById(R.id.frame_layout);
 
         final int position = getIntent().getIntExtra("position", 0);
 
@@ -370,6 +389,51 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
                                 }
                             }
                         });
+
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ulasan_user")
+                        .child(String.valueOf(position));
+                reference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        int fiveStar=0, fourStar=0, threestar=0, twoStar=0, oneStar=0, zeroStar=0;
+                        for (DataSnapshot data: dataSnapshot.getChildren()) {
+                            Ulasan review = data.getValue(Ulasan.class);
+
+                            if (review.getRating() == 5) {
+                                fiveStar++;
+                            } else if (review.getRating() == 4) {
+                                fourStar++;
+                            } else if (review.getRating() == 3) {
+                                threestar++;
+                            } else if (review.getRating() == 2) {
+                                twoStar++;
+                            } else if (review.getRating() == 1) {
+                                oneStar++;
+                            } else {
+                                zeroStar++;
+                            }
+                        }
+
+                        int newRating = ((5*fiveStar) + (4*fourStar) + (3*threestar)
+                                + (2*twoStar) + (1*oneStar)) / (fiveStar+fourStar+threestar+twoStar+oneStar+zeroStar);
+
+                        DatabaseReference myDbRef = FirebaseDatabase.getInstance().getReference("tempat_wisata")
+                                .child(String.valueOf(position)).child("rating");
+
+                        myDbRef.setValue(newRating)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d("STATUS", "Successful updating ratings");
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
 
@@ -389,13 +453,65 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
         });
 
         closerPlaceList = new ArrayList<>();
-        scrollView = findViewById(R.id.scrollView);
+        closerAdapter = new PlaceAdapter(this, this, closerPlaceList);
+        closerPlaceView = findViewById(R.id.closer_place_list);
 
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(this,
+                LinearLayoutManager.HORIZONTAL, false);
+        closerPlaceView.setLayoutManager(manager);
+        closerPlaceView.setItemAnimator(new DefaultItemAnimator());
+        closerPlaceView.setAdapter(closerAdapter);
+
+        getCloserPlace();
+
+        scrollView = findViewById(R.id.scrollView);
         SupportMapFragment mapFragment = (CustomSupportFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+    }
+
+    private void getCloserPlace() {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("tempat_wisata");
+
+        dbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<Place> temp = new ArrayList<>();
+                for (DataSnapshot data: dataSnapshot.getChildren()) {
+                    Place place = data.getValue(Place.class);
+
+                    temp.add(place);
+                }
+
+                int position = getIntent().getIntExtra("position", 0);
+                Place currentPlace = temp.get(position);
+
+                double minDistance = Double.MAX_VALUE;
+                double distance;
+                int minIndex = 0;
+
+                for (int i=0; i<temp.size(); i++) {
+                    Place place = temp.get(i);
+                    distance = Util.getDistance(currentPlace.getLat(), currentPlace.getLon(),
+                            place.getLat(), place.getLon());
+
+                    if (distance < minDistance && i != position) {
+                        minDistance = distance;
+                        minIndex = i;
+                    }
+                }
+
+                closerPlaceList.add(temp.get(minIndex));
+                closerAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -421,7 +537,7 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
                 final Place place = dataSnapshot.getValue(Place.class);
 
                 LatLng currentPlace = new LatLng(place.getLat(), place.getLon());
-                gMap.addMarker(new MarkerOptions().position(currentPlace).title("Marker in Sydney"));
+                gMap.addMarker(new MarkerOptions().position(currentPlace).title("Lokasi Wisata"));
                 gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPlace, 12));
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -452,7 +568,7 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
 
                                     gMap.addPolyline(options);
                                 } else {
-                                    Toast.makeText(DetailTempatWisata.this, "Hidupkan GPS Anda", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(DetailTempatWisata.this, "Hidupkan GPS Anda", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });

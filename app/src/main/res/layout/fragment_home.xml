@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="Daftar 5 Tempat Wisata Favorit di Kabupaten Aceh Tengah"
+        android:text="Tempat Wisata Favorit di Kabupaten Aceh Tengah"
         android:textAlignment="center"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="32dp"

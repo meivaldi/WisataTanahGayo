@@ -3,16 +3,18 @@ package com.meivaldi.wisatatanohgayo;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
-public class Place {
+public class Place implements Comparable<Place> {
 
     private String alamat, deskripsi, jam_operasional, nama_tempat, sumber, ketinggian, luas, foto;
     private Double lat, lon;
-    private int rating;
+    private Integer rating;
+    private int id;
 
     public Place() { }
 
-    public Place(String alamat, String deskripsi, String jam_operasional, String nama_tempat, String sumber,
+    public Place(int id, String alamat, String deskripsi, String jam_operasional, String nama_tempat, String sumber,
                  String ketinggian, String luas, Double lat, Double lon, int rating, String foto) {
+        this.id = id;
         this.alamat = alamat;
         this.deskripsi = deskripsi;
         this.jam_operasional = jam_operasional;
@@ -22,8 +24,16 @@ public class Place {
         this.luas = luas;
         this.lat = lat;
         this.lon = lon;
-        this.rating = rating;
+        this.rating = new Integer(rating);
         this.foto = foto;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getAlamat() {
@@ -98,11 +108,11 @@ public class Place {
         this.lon = lon;
     }
 
-    public int getRating() {
+    public Integer getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(Integer rating) {
         this.rating = rating;
     }
 
@@ -112,5 +122,10 @@ public class Place {
 
     public void setFoto(String foto) {
         this.foto = foto;
+    }
+
+    @Override
+    public int compareTo(Place place) {
+        return this.getRating().compareTo(place.getRating());
     }
 }

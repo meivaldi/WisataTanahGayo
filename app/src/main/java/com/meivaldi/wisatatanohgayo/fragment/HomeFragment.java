@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +26,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.meivaldi.wisatatanohgayo.Place;
 import com.meivaldi.wisatatanohgayo.R;
 import com.meivaldi.wisatatanohgayo.adapter.CardAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
@@ -69,12 +72,20 @@ public class HomeFragment extends Fragment {
         db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                places.clear();
+
+                int counter = 0;
                 for (DataSnapshot data: dataSnapshot.getChildren()) {
                     Place place = data.getValue(Place.class);
 
-                    places.add(place);
+                    if (counter <= 4) {
+                        places.add(place);
+                    }
+
+                    counter++;
                 }
 
+                Collections.sort(places, Collections.<Place>reverseOrder());
                 adapter.notifyDataSetChanged();
 
                 shimmerContainer.stopShimmerAnimation();

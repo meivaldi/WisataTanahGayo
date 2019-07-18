@@ -103,6 +103,7 @@ public class DiscoverFragment extends Fragment {
         db.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        places.clear();
                         for (DataSnapshot data: dataSnapshot.getChildren()) {
                             Place place = data.getValue(Place.class);
 

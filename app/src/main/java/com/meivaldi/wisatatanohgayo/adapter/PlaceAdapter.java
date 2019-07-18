@@ -65,7 +65,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.MyViewHolder
     @Override
     public void onBindViewHolder(@NonNull final PlaceAdapter.MyViewHolder holder, final int position) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/IndieFlower.ttf");
-        Place place = placesFiltered.get(position);
+        final Place place = placesFiltered.get(position);
 
         holder.placeName.setTypeface(typeface);
         holder.placeName.setText(place.getNama_tempat());
@@ -100,7 +100,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.MyViewHolder
                         holder.image, "image");
 
                 Intent intent = new Intent(context, DetailTempatWisata.class);
-                intent.putExtra("position", position);
+                intent.putExtra("position", place.getId());
                 context.startActivity(intent, options.toBundle());
             }
         });

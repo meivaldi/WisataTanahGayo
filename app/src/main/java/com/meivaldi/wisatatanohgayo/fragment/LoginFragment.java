@@ -42,6 +42,7 @@ public class LoginFragment extends Fragment {
 
         auth = FirebaseAuth.getInstance();
         dialog = new ProgressDialog(getContext());
+        dialog.setCancelable(false);
         dialog.setMessage("Memroses");
 
         register = view.findViewById(R.id.register);
@@ -53,13 +54,6 @@ public class LoginFragment extends Fragment {
         });
 
         login = view.findViewById(R.id.login);
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
         emailET = view.findViewById(R.id.emailET);
         passwordET = view.findViewById(R.id.passwordET);
 

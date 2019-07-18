@@ -51,7 +51,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/IndieFlower.ttf");
-        Place place = places.get(position);
+        final Place place = places.get(position);
 
         holder.placeName.setTypeface(typeface);
         holder.placeName.setText(place.getNama_tempat());
@@ -85,7 +85,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
                         holder.image, "image");
 
                 Intent intent = new Intent(context, DetailTempatWisata.class);
-                intent.putExtra("position", position);
+                intent.putExtra("position", place.getId());
                 context.startActivity(intent, options.toBundle());
             }
         });
@@ -97,7 +97,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
                         holder.image, "image");
 
                 Intent intent = new Intent(context, DetailTempatWisata.class);
-                intent.putExtra("position", position);
+                intent.putExtra("position", place.getId());
                 context.startActivity(intent, options.toBundle());
             }
         });
