@@ -568,7 +568,7 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
 
                                     gMap.addPolyline(options);
                                 } else {
-                                    //Toast.makeText(DetailTempatWisata.this, "Hidupkan GPS Anda", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(DetailTempatWisata.this, "Hidupkan GPS Anda", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
