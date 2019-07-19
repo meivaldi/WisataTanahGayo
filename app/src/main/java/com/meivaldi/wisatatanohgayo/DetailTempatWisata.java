@@ -44,6 +44,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -60,12 +61,14 @@ import com.google.firebase.storage.StorageReference;
 import com.meivaldi.wisatatanohgayo.adapter.ImageAdapter;
 import com.meivaldi.wisatatanohgayo.adapter.PlaceAdapter;
 import com.meivaldi.wisatatanohgayo.adapter.ReviewAdapter;
+import com.meivaldi.wisatatanohgayo.network.FetchURL;
+import com.meivaldi.wisatatanohgayo.network.TaskLoadedCallback;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyCallback {
+public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyCallback, TaskLoadedCallback {
 
     private ImageView image;
     private TextView namaTempat, content, sumber, alamat, luas, ketinggian, closerLabel;
@@ -95,6 +98,7 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
     private PlaceAdapter closerAdapter;
     private RecyclerView closerPlaceView;
 
+    private Polyline currentPolyline;
     private GoogleMap gMap;
     private FusedLocationProviderClient fusedLocationClient;
     private ScrollView scrollView;
@@ -560,13 +564,16 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
                                 if (location != null) {
                                     gMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())));
 
-                                    PolylineOptions options = new PolylineOptions().width(5).color(Color.GREEN)
+                                    /*PolylineOptions options = new PolylineOptions().width(5).color(Color.GREEN)
                                             .geodesic(true);
 
                                     options.add(new LatLng(location.getLatitude(), location.getLongitude()));
                                     options.add(new LatLng(place.getLat(), place.getLon()));
 
-                                    gMap.addPolyline(options);
+                                    gMap.addPolyline(options);*/
+                                    MarkerOptions place1 = new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude()));
+                                    MarkerOptions place2 = new MarkerOptions().position(new LatLng(place.getLat(), place.getLon()));
+                                    new FetchURL(DetailTempatWisata.this).execute(getUrl(place1.getPosition(), place2.getPosition(), "driving"), "driving");
                                 } else {
                                     Toast.makeText(DetailTempatWisata.this, "Hidupkan GPS Anda", Toast.LENGTH_SHORT).show();
                                 }
@@ -579,5 +586,23 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
 
             }
         });
+    }
+
+    private String getUrl(LatLng origin, LatLng dest, String directionMode) {
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+        String mode = "mode=" + directionMode;
+        String parameters = str_origin + "&" + str_dest + "&" + mode;
+        String output = "json";
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getString(R.string.api_key);
+
+        return url;
+    }
+
+    @Override
+    public void onTaskDone(Object... values) {
+        if (currentPolyline != null)
+            currentPolyline.remove();
+        currentPolyline = gMap.addPolyline((PolylineOptions) values[0]);
     }
 }

@@ -10,6 +10,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
