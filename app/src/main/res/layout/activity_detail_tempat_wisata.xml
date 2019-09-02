@@ -79,18 +79,8 @@
                 android:fontFamily="@font/indie_flower" />
 
             <TextView
-                android:id="@+id/source"
-                android:layout_below="@id/content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sumber: "
-                android:textColor="@android:color/black"
-                android:justificationMode="inter_word"
-                android:fontFamily="@font/indie_flower" />
-
-            <TextView
                 android:id="@+id/address_label"
-                android:layout_below="@id/source"
+                android:layout_below="@id/content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -110,19 +100,19 @@
                 android:fontFamily="@font/indie_flower"/>
 
             <TextView
-                android:id="@+id/luas_label"
+                android:id="@+id/fasilitas_label"
                 android:layout_below="@id/address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Luas"
+                android:text="Fasilitas"
                 android:textStyle="bold"
                 android:textSize="18dp"
                 android:fontFamily="@font/indie_flower"/>
 
             <TextView
-                android:id="@+id/luas"
-                android:layout_below="@id/luas_label"
+                android:id="@+id/fasilitas"
+                android:layout_below="@id/fasilitas_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -132,7 +122,7 @@
 
             <TextView
                 android:id="@+id/ketinggian_label"
-                android:layout_below="@id/luas"
+                android:layout_below="@id/fasilitas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -171,8 +161,28 @@
                 android:scrollbars="none"/>
 
             <TextView
-                android:id="@+id/closer_label"
+                android:id="@+id/map_label"
                 android:layout_below="@id/image_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Lokasi"
+                android:textStyle="bold"
+                android:textSize="18dp"
+                android:fontFamily="@font/indie_flower"/>
+
+            <fragment
+                android:id="@+id/map"
+                android:layout_below="@id/map_label"
+                android:layout_marginTop="20dp"
+                android:name="com.meivaldi.wisatatanohgayo.CustomSupportFragment"
+                android:layout_centerHorizontal="true"
+                android:layout_width="match_parent"
+                android:layout_height="300dp" />
+
+            <TextView
+                android:id="@+id/closer_label"
+                android:layout_below="@id/map"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -188,18 +198,9 @@
                 android:layout_marginTop="10dp"
                 android:scrollbars="none"/>
 
-            <fragment
-                android:id="@+id/map"
-                android:layout_below="@id/closer_place_list"
-                android:layout_marginTop="20dp"
-                android:name="com.meivaldi.wisatatanohgayo.CustomSupportFragment"
-                android:layout_centerHorizontal="true"
-                android:layout_width="match_parent"
-                android:layout_height="300dp" />
-
             <TextView
                 android:id="@+id/ulasan_label"
-                android:layout_below="@id/map"
+                android:layout_below="@id/closer_place_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"

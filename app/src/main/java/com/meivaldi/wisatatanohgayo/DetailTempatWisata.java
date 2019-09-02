@@ -71,7 +71,7 @@ import java.util.List;
 public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyCallback, TaskLoadedCallback {
 
     private ImageView image;
-    private TextView namaTempat, content, sumber, alamat, luas, ketinggian, closerLabel;
+    private TextView namaTempat, content, alamat, fasilitas, ketinggian, closerLabel;
     private DatabaseReference db;
 
     private List<Image> imageList;
@@ -128,9 +128,8 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
         image = findViewById(R.id.news_image);
         namaTempat = findViewById(R.id.name);
         content = findViewById(R.id.content);
-        sumber = findViewById(R.id.source);
         alamat = findViewById(R.id.address);
-        luas = findViewById(R.id.luas);
+        fasilitas = findViewById(R.id.fasilitas);
         ketinggian = findViewById(R.id.ketinggian);
         closerLabel = findViewById(R.id.closer_label);
 
@@ -178,9 +177,8 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
 
                 namaTempat.setText(place.getNama_tempat());
                 content.setText(place.getDeskripsi());
-                sumber.setText("Sumber: " + place.getSumber());
                 alamat.setText(place.getAlamat());
-                luas.setText(place.getLuas() + " km2");
+                fasilitas.setText("(Belum ada data)");
                 ketinggian.setText(place.getKetinggian() + " m");
                 closerLabel.setText("Tempat wisata lainnya didekat " + place.getNama_tempat());
             }
@@ -595,6 +593,14 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
         String parameters = str_origin + "&" + str_dest + "&" + mode;
         String output = "json";
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getString(R.string.api_key);
+
+        return url;
+    }
+
+    private String getDistance(LatLng src, LatLng dest) {
+        String origins = "origins=" + src.latitude + "," + src.longitude;
+        String destinations = "destinations=" + dest.latitude + "," + dest.longitude;
+        String url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&" + origins + "&" + destinations + "&key=" + getString(R.string.api_key);
 
         return url;
     }
