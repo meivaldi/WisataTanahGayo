@@ -38,20 +38,9 @@
                     android:fontFamily="@font/indie_flower"
                     android:layout_centerHorizontal="true"/>
 
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/ulasanET"
-                    android:layout_below="@id/label_ulasan_et"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="10dp"
-                    android:inputType="text"
-                    android:hint="Berikan Ulasan Anda"
-                    android:fontFamily="@font/indie_flower"
-                    android:layout_centerHorizontal="true"/>
-
                 <LinearLayout
                     android:id="@+id/starBox"
-                    android:layout_below="@id/ulasanET"
+                    android:layout_below="@id/label_ulasan_et"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"

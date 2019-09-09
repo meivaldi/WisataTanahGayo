@@ -4,18 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import cz.msebera.android.httpclient.Header;
 
 import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -27,7 +23,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -58,14 +53,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.meivaldi.wisatatanohgayo.adapter.ImageAdapter;
 import com.meivaldi.wisatatanohgayo.adapter.PlaceAdapter;
 import com.meivaldi.wisatatanohgayo.adapter.ReviewAdapter;
 import com.meivaldi.wisatatanohgayo.network.FetchURL;
 import com.meivaldi.wisatatanohgayo.network.TaskLoadedCallback;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyCallback, TaskLoadedCallback {
@@ -90,7 +89,6 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
 
     private Button ulasan, kirimUlasan;
     private Dialog ulasanDialog;
-    private AppCompatEditText ulasanET;
     private ImageView star1, star2, star3, star4, star5;
     private int ratingValue;
 
@@ -178,7 +176,7 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
                 namaTempat.setText(place.getNama_tempat());
                 content.setText(place.getDeskripsi());
                 alamat.setText(place.getAlamat());
-                fasilitas.setText("(Belum ada data)");
+                fasilitas.setText(place.getLuas());
                 ketinggian.setText(place.getKetinggian() + " m");
                 closerLabel.setText("Tempat wisata lainnya didekat " + place.getNama_tempat());
             }
@@ -356,7 +354,6 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
             }
         });
 
-        ulasanET = ulasanDialog.findViewById(R.id.ulasanET);
         kirimUlasan = ulasanDialog.findViewById(R.id.kirim);
 
         kirimUlasan.setOnClickListener(new View.OnClickListener() {
@@ -365,10 +362,9 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
                 pDialog.show();
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-                String ulasan = ulasanET.getText().toString();
                 String namaUser = user.getDisplayName();
 
-                Ulasan ulasanBaru = new Ulasan(namaUser, ulasan, ratingValue);
+                Ulasan ulasanBaru = new Ulasan(namaUser, ratingValue);
 
                 DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("ulasan_user")
                         .child(String.valueOf(position)).child(user.getDisplayName());
@@ -385,7 +381,6 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
                                 } else {
                                     Toast.makeText(DetailTempatWisata.this, "Gagal Mgengirim Ulasan", Toast.LENGTH_SHORT).show();
 
-                                    ulasanET.setText("");
                                     ulasanDialog.dismiss();
                                     pDialog.dismiss();
                                 }
@@ -601,6 +596,24 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
         String origins = "origins=" + src.latitude + "," + src.longitude;
         String destinations = "destinations=" + dest.latitude + "," + dest.longitude;
         String url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&" + origins + "&" + destinations + "&key=" + getString(R.string.api_key);
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get(url, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                try {
+                    String result = new String(responseBody);
+                    JSONObject responseObject = new JSONObject(result);
+                } catch (Exception e) {
+
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+            }
+        });
 
         return url;
     }

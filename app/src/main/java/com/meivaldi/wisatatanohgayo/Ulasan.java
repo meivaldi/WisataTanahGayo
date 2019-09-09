@@ -11,6 +11,11 @@ public class Ulasan {
     public Ulasan() {
     }
 
+    public Ulasan(String name, int rating) {
+        this.nama = name;
+        this.rating = rating;
+    }
+
     public Ulasan(String nama, String ulasan, int rating) {
         this.nama = nama;
         this.ulasan = ulasan;
