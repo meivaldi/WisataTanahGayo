@@ -50,10 +50,6 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        Typeface typeface = Typeface.createFromAsset(getContext().getAssets(), "fonts/IndieFlower.ttf");
-
-        TextView title = view.findViewById(R.id.title);
-        title.setTypeface(typeface);
         dataContainer = view.findViewById(R.id.container);
 
         shimmerContainer = view.findViewById(R.id.shimmer_container);
@@ -73,19 +69,19 @@ public class HomeFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 places.clear();
+                ArrayList<Place> tempPlaces = new ArrayList<>();
 
-                int counter = 0;
                 for (DataSnapshot data: dataSnapshot.getChildren()) {
                     Place place = data.getValue(Place.class);
-
-                    if (counter <= 4) {
-                        places.add(place);
-                    }
-
-                    counter++;
+                    tempPlaces.add(place);
                 }
 
-                Collections.sort(places, Collections.<Place>reverseOrder());
+                Collections.sort(tempPlaces, Collections.<Place>reverseOrder());
+
+                for (int i=0; i<5; i++) {
+                    places.add(tempPlaces.get(i));
+                }
+
                 adapter.notifyDataSetChanged();
 
                 shimmerContainer.stopShimmerAnimation();

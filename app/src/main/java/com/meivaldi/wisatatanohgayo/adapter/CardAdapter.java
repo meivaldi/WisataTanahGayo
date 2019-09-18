@@ -50,10 +50,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/IndieFlower.ttf");
         final Place place = places.get(position);
 
-        holder.placeName.setTypeface(typeface);
         holder.placeName.setText(place.getNama_tempat());
 
         StorageReference reference = FirebaseStorage.getInstance().getReference(place.getFoto());

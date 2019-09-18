@@ -38,7 +38,7 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-        Typeface typeface = Typeface.createFromAsset(getContext().getAssets(), "fonts/IndieFlower.ttf");
+        
 
         auth = FirebaseAuth.getInstance();
         dialog = new ProgressDialog(getContext());
@@ -56,11 +56,6 @@ public class LoginFragment extends Fragment {
         login = view.findViewById(R.id.login);
         emailET = view.findViewById(R.id.emailET);
         passwordET = view.findViewById(R.id.passwordET);
-
-        emailET.setTypeface(typeface);
-        passwordET.setTypeface(typeface);
-        login.setTypeface(typeface);
-        register.setTypeface(typeface);
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override

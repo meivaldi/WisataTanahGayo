@@ -70,7 +70,7 @@ import java.util.List;
 public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyCallback, TaskLoadedCallback {
 
     private ImageView image;
-    private TextView namaTempat, content, alamat, fasilitas, ketinggian, closerLabel;
+    private TextView namaTempat, content, alamat, fasilitas, ketinggian, closerLabel, distance;
     private DatabaseReference db;
 
     private List<Image> imageList;
@@ -130,6 +130,7 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
         fasilitas = findViewById(R.id.fasilitas);
         ketinggian = findViewById(R.id.ketinggian);
         closerLabel = findViewById(R.id.closer_label);
+        distance = findViewById(R.id.distance);
 
         final int position = getIntent().getIntExtra("position", 0);
 
@@ -470,6 +471,40 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
     }
 
     private void getCloserPlace() {
+        int position = getIntent().getIntExtra("position", 0);
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("tempat_wisata").child(String.valueOf(position));
+
+        dbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Place place = dataSnapshot.getValue(Place.class);
+
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("tempat_wisata").child(String.valueOf(place.getTempat_terdekat()));
+
+                reference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Place tempat = dataSnapshot.getValue(Place.class);
+
+                        closerPlaceList.add(tempat);
+                        closerAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    /*private void getCloserPlace() {
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("tempat_wisata");
 
         dbRef.addValueEventListener(new ValueEventListener() {
@@ -509,7 +544,7 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
 
             }
         });
-    }
+    }*/
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -566,6 +601,7 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
                                     gMap.addPolyline(options);*/
                                     MarkerOptions place1 = new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude()));
                                     MarkerOptions place2 = new MarkerOptions().position(new LatLng(place.getLat(), place.getLon()));
+                                    getDistance(place1.getPosition(), place2.getPosition());
                                     new FetchURL(DetailTempatWisata.this).execute(getUrl(place1.getPosition(), place2.getPosition(), "driving"), "driving");
                                 } else {
                                     Toast.makeText(DetailTempatWisata.this, "Hidupkan GPS Anda", Toast.LENGTH_SHORT).show();
@@ -595,7 +631,8 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
     private String getDistance(LatLng src, LatLng dest) {
         String origins = "origins=" + src.latitude + "," + src.longitude;
         String destinations = "destinations=" + dest.latitude + "," + dest.longitude;
-        String url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&" + origins + "&" + destinations + "&key=" + getString(R.string.api_key);
+        String url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&" + origins + "&" + destinations + "&key=" + getString(R.string.api_key) + "&language=id";
+        Log.d("URL", url);
 
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(url, new AsyncHttpResponseHandler() {
@@ -604,8 +641,18 @@ public class DetailTempatWisata extends AppCompatActivity implements OnMapReadyC
                 try {
                     String result = new String(responseBody);
                     JSONObject responseObject = new JSONObject(result);
-                } catch (Exception e) {
+                    JSONArray jsonArray = responseObject.getJSONArray("rows");
+                    JSONObject api = jsonArray.getJSONObject(0);
+                    JSONArray elements = api.getJSONArray("elements");
+                    JSONObject object = elements.getJSONObject(0);
+                    JSONObject distanceMap = object.getJSONObject("distance");
 
+                    //responseObject.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0).getJSONObject("distance").getString("text")
+
+                    distance.setText("Perkiraan jarak ke lokasi tujuan: " + distanceMap.getString("text"));
+                    Toast.makeText(DetailTempatWisata.this, object.getString("text"), Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 

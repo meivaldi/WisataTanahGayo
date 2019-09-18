@@ -50,7 +50,7 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        Typeface typeface = Typeface.createFromAsset(getContext().getAssets(), "fonts/IndieFlower.ttf");
+        
 
         auth = FirebaseAuth.getInstance();
         progressDialog = new ProgressDialog(getContext());
@@ -59,17 +59,7 @@ public class ProfileFragment extends Fragment {
 
         TextView name = view.findViewById(R.id.name);
         TextView email = view.findViewById(R.id.email);
-        TextView usernameLabel = view.findViewById(R.id.username_label);
-        TextView passwordLabel = view.findViewById(R.id.password_label);
-        TextView emailLabel = view.findViewById(R.id.email_label);
         logout = view.findViewById(R.id.logout);
-
-        name.setTypeface(typeface);
-        email.setTypeface(typeface);
-        usernameLabel.setTypeface(typeface);
-        passwordLabel.setTypeface(typeface);
-        emailLabel.setTypeface(typeface);
-        logout.setTypeface(typeface);
 
         changeName = view.findViewById(R.id.change_name);
         changeEmail = view.findViewById(R.id.change_email);
@@ -91,10 +81,7 @@ public class ProfileFragment extends Fragment {
         changePasswordDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         newNameET = changeNameDialog.findViewById(R.id.new_name);
-        newNameET.setTypeface(typeface);
-
         changeNameBT = changeNameDialog.findViewById(R.id.change_name);
-        changeNameBT.setTypeface(typeface);
         changeNameBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,10 +123,8 @@ public class ProfileFragment extends Fragment {
         });
 
         newEmailET = changeEmailDialog.findViewById(R.id.new_email);
-        newEmailET.setTypeface(typeface);
 
         changeEmailBT = changeEmailDialog.findViewById(R.id.change_email);
-        changeEmailBT.setTypeface(typeface);
         changeEmailBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -172,10 +157,8 @@ public class ProfileFragment extends Fragment {
         });
 
         newPasswordET = changePasswordDialog.findViewById(R.id.new_password);
-        newPasswordET.setTypeface(typeface);
 
         changePasswordBT = changePasswordDialog.findViewById(R.id.change_password);
-        changePasswordBT.setTypeface(typeface);
         changePasswordBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

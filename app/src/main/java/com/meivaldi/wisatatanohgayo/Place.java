@@ -8,12 +8,12 @@ public class Place implements Comparable<Place> {
     private String alamat, deskripsi, jam_operasional, nama_tempat, sumber, ketinggian, luas, foto;
     private Double lat, lon;
     private Integer rating;
-    private int id;
+    private int id, tempat_terdekat;
 
     public Place() { }
 
     public Place(int id, String alamat, String deskripsi, String jam_operasional, String nama_tempat, String sumber,
-                 String ketinggian, String luas, Double lat, Double lon, int rating, String foto) {
+                 String ketinggian, String luas, Double lat, Double lon, int rating, String foto, int terdekat) {
         this.id = id;
         this.alamat = alamat;
         this.deskripsi = deskripsi;
@@ -26,6 +26,7 @@ public class Place implements Comparable<Place> {
         this.lon = lon;
         this.rating = new Integer(rating);
         this.foto = foto;
+        this.tempat_terdekat = terdekat;
     }
 
     public int getId() {
@@ -122,6 +123,14 @@ public class Place implements Comparable<Place> {
 
     public void setFoto(String foto) {
         this.foto = foto;
+    }
+
+    public int getTempat_terdekat() {
+        return tempat_terdekat;
+    }
+
+    public void setTempat_terdekat(int tempat_terdekat) {
+        this.tempat_terdekat = tempat_terdekat;
     }
 
     @Override

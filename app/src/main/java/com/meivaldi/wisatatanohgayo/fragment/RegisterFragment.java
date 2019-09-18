@@ -47,8 +47,6 @@ public class RegisterFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_register, container, false);
 
-        Typeface typeface = Typeface.createFromAsset(getContext().getAssets(), "fonts/IndieFlower.ttf");
-
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance().getReference();
 
@@ -83,12 +81,6 @@ public class RegisterFragment extends Fragment {
                 loadFragment(new LoginFragment());
             }
         });
-
-        nameET.setTypeface(typeface);
-        emailET.setTypeface(typeface);
-        passwordET.setTypeface(typeface);
-        login.setTypeface(typeface);
-        register.setTypeface(typeface);
 
         return view;
     }

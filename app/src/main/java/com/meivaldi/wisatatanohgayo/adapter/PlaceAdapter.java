@@ -64,10 +64,8 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull final PlaceAdapter.MyViewHolder holder, final int position) {
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/IndieFlower.ttf");
         final Place place = placesFiltered.get(position);
 
-        holder.placeName.setTypeface(typeface);
         holder.placeName.setText(place.getNama_tempat());
 
         StorageReference reference = FirebaseStorage.getInstance().getReference(place.getFoto());
