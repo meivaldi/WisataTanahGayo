@@ -3,12 +3,17 @@ package com.meivaldi.wisatatanohgayo;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.MenuItem;
@@ -33,6 +38,7 @@ import com.meivaldi.wisatatanohgayo.fragment.ProfileFragment;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int MY_PERMISSIONS_REQUEST_READ_COARSE_LOCATION = 1;
     private BottomNavigationView bottomNavigationView;
     private FirebaseAuth mAuth;
     private ProgressDialog dialog;
@@ -51,6 +57,23 @@ public class MainActivity extends AppCompatActivity {
         dialog = new ProgressDialog(this);
         dialog.setCancelable(false);
         dialog.setMessage("Memroses...");
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION) ||
+                        ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                } else {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                            MY_PERMISSIONS_REQUEST_READ_COARSE_LOCATION);
+                }
+            } else {
+
+            }
+        }
 
         mAuth = FirebaseAuth.getInstance();
 
